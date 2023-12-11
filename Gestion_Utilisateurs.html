@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="Gestion_Utilisateurs.css">
+	<title>GRP-6-SE-2023</title>
+</head>
+<body>
+		<h1 style="text-align: center;">Gestion des utilisateurs et groupes sous Linux</h1>
+		<div style="font-family: sans-serif; font-style: italic;">
+		<p>
+			PROJET DU GROUPE N°6 : GESTION DES UTILISATEURS ET GROUPES SOUS LINUX <br>
+			<h3>1.	Les utilisateurs</h3>
+			Unix est un système multi utilisateurs. C’est-à-dire que plusieurs personnes peuvent l’utiliser de façon simultanée. <br>
+Pour le système, un utilisateur n’est pas obligatoirement une personne physique. Un utilisateur peut détenir des fichiers, exécuter des programmes ou encore déclencher automatiquement des fonctions systèmes. <br>
+Par exemple, un utilisateur peut être créer dans le seul but de détenir des fichiers publics. On parle alors de pseudo utilisateur. <br>
+Un utilisateur possède un nom d’utilisateur appelé aussi <strong>login</strong> lui permettant d’établir une connexion. Ce <strong>login</strong> est associé à un mot de passe personnel.
+Les utilisateurs sont identifiés par le système grâce à un UID (identifiant d’utilisateur) unique. Cet identifiant est une valeur numérique. <br></p>
+<p>
+
+•	<strong>Le fichier etc/passwd</strong><br>
+
+<strong>Le fichier /etc/passwd</strong> contient les informations relatives à tous les utilisateurs du système. Chaque ligne du fichier concerne un utilisateur. Les différents champs sont séparés par <strong>le signe deux points</strong>. Exemple :   <strong>login:mot-de-passe:UID:GID:info-utilisateur:répertoire-principal:shell
+</strong><br>
+</p>
+<p>
+• <strong>login</strong> est l'identifiant que doit entrer l'utilisateur pour s'authentifier. <br> 
+• <strong>mot-de-passe</strong> est le mot de passe crypté en md5. Ce champ peut prendre plusieurs significations : <br>
+
+ <strong>*</strong> : il est impossible de s'authentifier sur le système avec ce compte. <br>
+ <strong>!!</strong> : le compte est désactivé. <br>
+ <strong>x</strong> ou <strong>!</strong> : le mot de passe est dans un fichier shadow. <br>
+ <strong>Champ vide</strong> : il n'y a pas de mot de passe pour ce compte.  <br>
+
+•	<strong>UID</strong> : identifiant unique de l'utilisateur, sous forme de valeur numérique. L'utilisateur root possède l'UID 0. Les UID inférieurs à 100 sont réservés aux comptes système. <br>
+•	GID : identifiant du groupe principal de l'utilisateur. <br>
+•	info-utilisateur : nom complet et autres informations telles que le numéro de poste... Chaque information est séparée par une virgule. <br>
+•	répertoire-principal : répertoire dans lequel sont stockés les fichiers appartenant à l'utilisateur. En général de la forme /home/toto. <br>
+•	shell : indique quel interpréteur de commandes sera lancé après l'authentification. <br>
+</p>
+
+<p>
+	Le fichier /etc/passwd est accessible à tout le monde car certaines commandes ont besoin de connaitre la liste des utilisateurs ou la correspondance login/UID. <br>
+
+•	Le fichier /etc/shadow <br>
+
+Les mots de passe sont stockés dans ce fichier qui ne peut être lu que par l'administrateur. <br>
+
+<h4>1.1  Commandes de gestions des utilisateurs</h4>
+
+<strong>a)	Ajouter un utilisateur.</strong> <br>
+
+La commande est de la forme : # useradd options login 
+Exemple : # useradd toto créera l'utilisateur toto. <br>
+
+Les options de useradd sont : <br>
+
+<table >
+		<tr>
+			<th>c</th>
+			<td>Affiche des informations concernant l'utilisateur (nom, poste...). </td>
+		</tr>
+		<tr>
+			<th>d</th>
+			<td>Affiche le chemin du répertoire personnel de l'utilisateur. </td>
+		</tr>
+		<tr>
+			<th>D</th>
+			<td>Affiche les options par défaut. Il est possible de changer leurs valeurs à l'aide d'options attachées à la commande useradd - D. </td>
+		</tr>
+		<tr>
+			<th>e</th>
+			<td>Affiche la date d'expiration du compte. Le format est AAAA-MM-JJ. </td>
+		</tr>
+		<tr>
+			<th>f</th>
+			<td>Affiche le nombre de jours suivant l'expiration du mot de passe après lequel le compte est désactivé. La valeur 0 permet de désactiver le compte dès que le mot de passe expire. La valeur -1 (valeur par défaut) permet de désactiver cette caractéristique. </td>
+		</tr>
+		<tr>
+			<th>g</th>
+			<td>Affiche le nom du groupe ou le numéro du groupe de connexion initial de l'utilisateur. Le nom ou le numéro du groupe doivent exister. Le numéro de groupe par défaut est 1. </td>
+		</tr>
+		<tr>
+			<th>G</th>
+			<td>Affiche les autres groupes (séparés par des virgules) auxquels appartient l'utilisateur. </td>
+		</tr>
+		<tr>
+			<th>m</th>
+			<td>Le répertoire de l'utilisateur sera créé (ce n'est pas fait par défaut). </td>
+		</tr>
+		<tr>
+			<th>s</th>
+			<td>Indique quel est le shell lancé à la connexion de l'utilisateur. </td>
+		</tr>
+		<tr>
+			<th>u</th>
+			<td>Affiche l'identifiant unique de l'utilisateur. </td>
+		</tr>
+	</table><br />
+	
+</p>
+
+<p>
+	Exemple : vous voulez créer l'utilisateur toto et : <br>
+•	inclure le commentaire : utilisateur toto.<br>
+•	définir son shell : /bin/zsh.<br>
+•	définir son répertoire personnel : /home/toto.<br> 
+•	recopier le contenu de /etc/skel dans son répertoire.<br> 
+•	faire en sorte qu'il appartienne aux groupes dev et audio.<br>
+•	faire en sorte que le compte soit désactivé immédiatement après expiration du mot de passe.<br>
+
+Vous taperez : # useradd -c "utilisateur toto" -f 0 -G dev,audio -m -k /etc/skel -s /bin/zsh toto<br>
+
+<strong>b)	Supprimer un utilisateur</strong><br>
+
+La commande est de la forme : # userdel options login<br> 
+Le répertoire de l'utilisateur n'est pas supprimé ; si vous voulez le supprimer, ajoutez l'option -r à la commande.<br>
+
+<strong>c)	Modifier un compte utilisateur</strong><br>
+
+Lorsqu'un compte utilisateur est déjà créé, vous pouvez avoir besoin de le modifier.<br>
+La commande est de la forme : # usermod options login<br> 
+Vous pouvez utiliser les mêmes options que celles utilisées avec la commande useradd.<br>
+Exemple : # usermod -d /home/toto -m tutu<br> 
+Change le répertoire personnel de tutu en /home/toto.<br> 
+Cette commande recopie également le contenu de l'ancien dossier personnel et ajuste les droits.<br> 
+Autre exemple : # usermod -l toto tutu<br> 
+Change le nom de l'utilisateur tutu en toto. Pour que ça fonctionne, tutu ne doit pas être connecté à la machine au moment où l'on tape la commande.<br><br>
+
+Pour que les modifications soient effectives, l'utilisateur concerné par les modifications doit se déloguer puis se reloguer.<br> 
+
+</p>
+
+<p>
+	<strong>d)	Gérer le mot de passe d’un utilisateur</strong><br>
+
+L'administrateur peut changer n'importe quel mot de passe. L'ancien mot de passe de l'utilisateur pour lequel il veut opérer un changement lui sera demandé.<br> 
+Un utilisateur normal ne peut changer que son propre mot de passe.<br> 
+La commande est de la forme : # passwd options login<br> 
+Exemple : # passwd toto.<br> 
+Si l'argument login n'est pas spécifié, le changement de mot de passe s'applique sur l'utilisateur courant.<br>
+Les options de passwd sont :<br>
+ <table>
+ 	<tr>
+			<th>u</th>
+			<td>Déverrouille le mot de passe du compte. Seul l'utilisateur root peut utiliser cette option.  </td>
+		</tr>
+ </table><br>
+ <strong>e)	Afficher des informations sur un utilisateur</strong><br>
+
+La commande whoami affiche l'identité de l'utilisateur courant.<br> 
+Les commandes who, users et w permettent de connaître les utilisateurs actuellement connectés sur la machine.<br>
+
+<h4>2.	Le groupe</h4>
+
+Un groupe est un ensemble d’utilisateurs qui partagent la même fonction. Tout comme les utilisateurs, les groupes possèdent un identifiant unique : un GID (identifiant de groupe) et chaque utilisateur possède son propre groupe.<br> 
+Un groupe secondaire est un groupe auquel un utilisateur peut appartenir. Les utilisateurs peuvent appartenir à un nombre maximal de 15 groupes secondaires.<br>
+
+•	Le fichier /etc/group.<br>
+
+Ce fichier contient les informations relatives aux groupes présents sur le système. La syntaxe d'une ligne est : groupe:*:GID:utilisateurs<br> 
+•	groupe : le nom du groupe.<br>
+* : la présence de ce champ est liée aux anciennes versions d'Unix. Il n'est plus utilisé et peut rester vide ou contenir le caractère * ou x.<br> 
+•	GID : identifiant unique du groupe sous la forme d'une valeur numérique. <br>
+•	utilisateurs : il s'agit de la liste des utilisateurs appartenant au groupe. Les différents utilisateurs sont séparés par des virgules. <br> 
+
+</p>
+
+<p>
+	<strong>a)	Créer un groupe</strong> <br>
+
+La commande est de la forme : # groupadd option groupe <br>
+Exemple : # groupadd modem <br>
+Les options de groupadd sont : <br>
+ <table>
+ 	<tr>
+		<th>f</th>
+		<td>Permet de stopper la commande lorsque le groupe ou le GID du nouveau groupe existe déjà.</td>
+	</tr>
+	<tr>
+		<th>g</th>
+		<td>Permet de choisir la valeur numérique du GID du nouveau groupe. Cet identifiant doit être unique. </td>
+	</tr>
+	<tr>
+		<th>r</th>
+		<td>Permet d'ajouter un groupe système dont le GID est inférieur à 500. </td>
+	</tr>
+ </table><br>
+
+ <strong>b)	Supprimer un groupe </strong><br>
+
+La commande est de la forme : # groupdel groupe ou bien # groupdel GID <br>
+On ne peut pas supprimer un groupe si c'est le groupe principal d'un utilisateur. <br>
+
+<strong>c)	Modifier les groupes secondaires d’un compte</strong> <br>
+
+La commande est : # usermod <br>
+Cette commande supporte les mêmes options que la commande useradd. Exemple : # usermod -G toto,users,fileshare,dev toto <br>
+Permet d'ajouter l'utilisateur toto dans les groupes users, fileshare et dev. <br>
+ 
+Attention : si vous utilisez la commande usermod -G, il est nécessaire de rappeler l'ensemble de groupes secondaires auxquels appartient l'utilisateur. <br>
+
+Vous pouvez aussi ajouter ou enlever des utilisateurs d'un groupe : # gpasswd -a ajoute un utilisateur. # gpasswd -d supprime un utilisateur. <br>
+
+</p>
+
+<p>
+	<strong>d)	Affiche des informations sur un groupe</strong> <br>
+
+Pour connaître les groupes auxquels appartient un utilisateur, utilisez la commande groups. Si vous ne spécifiez pas le nom d'un utilisateur, ce sont les groupes de l'utilisateur courant qui seront affichés.<br>
+Pour connaître les groupes d'un utilisateur particulier, il suffit de passer son login en argument de la commande.<br>
+<strong>•	Les droits d’accès</strong> <br>
+
+Linux possède un mécanisme de gestion de droit d’accès. Donc il est possible pour un propriétaire de fichier de donner ou omettre aux autres utilisateurs quelques droits. <br>
+
+<table>
+	<thead>
+			<tr>
+				<th>Droits d'accès</th>
+				<th>Sur les répertoires</th>
+				<th>Sur les fichiers</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+				<td>Lire (read)(r)</td>
+				<td>Autorisation de voir le contenu d’un répertoire ou les sous répertoires</td>
+				<td>Autorisation de voir le contenu d’un fichier</td>
+			</tr>
+			<tr>
+				<td>Ecrire (write) (w)</td>
+				<td>Autorisation de créer, modifier et supprimer les fichiers ou les sous répertoires</td>
+				<td>Autorisation aux entités d’ajouter, de modifier et de supprimer le contenu d’un fichier </td>
+			</tr>
+			<tr>
+				<td>Exécuter (execute) (x)</td>
+				<td>Autorisation d’accéder au répertoire</td>
+				<td>Permettre d’exécuter le fichier</td>
+			</tr>
+			<tr>
+				<td>(-)</td>
+				<td>Pas d’autorisation</td>
+				<td>Pas d’autorisation</td>
+			</tr>
+	<tbody>
+</table><br>
+
+<img src="IMG/Cap.PNG" style="width: 500px;">
+
+<table style="width: 50%; text-align: center;">
+	<tr>
+		<td>-</td>
+		<td>rwx</td>
+		<td>rw-</td>
+		<td>r--</td>
+	</tr>
+	<tr>
+		<td>d</td>
+		<td>rwx</td>
+		<td>rw-</td>
+		<td>r--</td>
+	</tr>
+	<tr>
+		<td style="border: none;"><strong>Type de Fichier</strong></td>
+		<td style="border: none;"><strong>Droits pour le propriétaire</strong></td>
+		<td style="border: none;"><strong>Droits pour le groupe</strong></td>
+		<td style="border: none;"><strong>Droits pour les autres</strong></td>
+	</tr>
+</table>
+
+</p>
+Avec : 
+<table style="width: 300px; text-align: center;">
+	<tr>
+		<td>-</td>
+		<td>Fichier ordinaire</td>
+	</tr>
+	<tr>
+		<td>d</td>
+		<td>Fichier répertoire</td>
+	</tr>
+	<tr>
+		<td>w</td>
+		<td>Read (lecture)</td>
+	</tr>
+	<tr>
+		<td>w</td>
+		<td>Write (écriture)</td>
+	</tr>
+	<tr>
+		<td>x</td>
+		<td>Exécution (execute)</td>
+	</tr>
+</table>
+
+<p>
+	<strong>a)	La commande CHMOD (Eng. Change mode)</strong> <br>
+Il existe deux façon d’utiliser chmod : <br>
+
+• Mode symbolique : <br>
+
+<table>
+	<thead>
+			<tr>
+				<th>Operateur chmod</th>
+				<th>Signification</th>
+				<th>Exemple</th>
+				<th>Résultat</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+				<td>+</td>
+				<td>Ajoute les droits désignés à un fichier ou répertoire</td>
+				<td>chmod o+wx mon_fichier.txt</td>
+				<td>Ajout des droits de modification et d’exécution aux autres utilisateurs</td>
+			</tr>
+			<tr>
+				<td>-</td>
+				<td>Supprime les droits désignés à un fichier ou répertoire</td>
+				<td>chmod u-x mon_fichier.txt </td>
+				<td>Supprime le droit d’exécuter ce fichier pour le propriétaire</td>
+			</tr>
+			<tr>
+				<td>=</td>
+				<td>Attribue exactement ces droits</td>
+				<td>chmod g=r-x mon_fichier.txt</td>
+				<td>Donne exactement les droits de lire et d’exécuter pour les utilisateurs du groupe</td>
+			</tr>
+	<tbody>
+</table> <br>
+Exemple : <br>
+-	Pour ajouter le droit d’exécution au propriétaire (User) chmod u+x fichier <br>
+-	Pour enlever le droit d’ecriture au utilisateur gu groupe (Group) chmod g-w fichier <br>
+-	Pour ajouter les droits de lecture et execution aux autres (Others) chmod o+rx fichier <br>
+-	Pour affecter les droits de lecture et execution au proprietaire (User) chmod u=r-x fichier <br>
+
+</p>
+
+<p>
+		Mode absolu : <br>
+La seconde facon d’attribuer les droits d’acces par chmod, consiste à utiliser des nombres pour chaque ensemble de droits. <br>
+Nous puvons calculer ces nombres si on retient la manière simple de transformer un nombre en base binaire vers une base decimale. Ainsi nous avons ces regles simples à retenir : <br>
+-	(r, w ou x) est représenté par 1. (-) est représenté par 0. <br>
+-	Nous supposons que le 3 bits obtenus sont en binaire, puis nous calculons le nombre équivalent en décimale. <br>
+
+Exemple : <br>
+<table style="width:500PX; text-align: center;">
+	<tr>
+			<th rowspan="3">-</th>
+			<td>rwx</td>
+			<td>rw-</td>
+			<td>r--</td>
+		</tr>
+		<tr>
+			<td>111</td>
+			<td>110</td>
+			<td>100</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>6</td>
+			<td>4</td>
+		</tr>
+</table><br>
+Pour affecter ces droits en mode absolue: <strong>chmod 764 fichier</strong>
+</p>
+
+</div>
+
+</body>
+</html>
