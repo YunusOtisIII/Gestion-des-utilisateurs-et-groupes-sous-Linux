@@ -31,13 +31,13 @@
 
  sudo adduser nouveau_utilisateur
 
-# Modification d'un utilisateur
+# II. Modification d'un utilisateur
 
  Pour modifier les détails d'un utilisateur existant tels que le nom complet ou le répertoire personnel, utilisez la commande # usermod :
 
  sudo usermod -c "Nouveau Nom" -d /nouveau/chemin utilisateur_existant
 
-# Suppression d'un utilisateur
+# III. Suppression d'un utilisateur
 
  Pour supprimer un utilisateur, utilisez la commande # userdel :
  
@@ -45,19 +45,19 @@
 
 # Groupes
 
-# Création d'un groupe
+# I. Création d'un groupe
 
  Pour créer un groupe, utilisez la commande addgroup ou # groupadd  :
 
  sudo addgroup nouveau_groupe
 
-# Modification d'un groupe
+# II. Modification d'un groupe
 
 Pour modifier les détails d'un groupe existant tels que son nom, utilisez la commande # groupmod :
 
  sudo groupmod -n nouveau_nom_groupe ancien_nom_groupe
 
-# Ajout/suppression d'un utilisateur à un groupe
+# III. Ajout/suppression d'un utilisateur à un groupe
 
 Pour ajouter un utilisateur à un groupe existant, utilisez la commande # usermod :
 
@@ -67,7 +67,7 @@ Pour supprimer un utilisateur d'un groupe, utilisez # gpasswd :
 
 sudo gpasswd -d utilisateur groupe
 
-# Suppression d'un groupe
+# IV. Suppression d'un groupe
 
 Pour supprimer un groupe, utilisez la commande # groupdel :
 
